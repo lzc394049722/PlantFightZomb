@@ -8,6 +8,11 @@ import android.graphics.drawable.BitmapDrawable;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.cheng.plantfightzomb.view.plant.BasePlant;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
 /**
  * Created by tarena on 2017/7/3.
  */
@@ -17,6 +22,7 @@ public class Zomb extends ImageView {
     protected Bitmap zombBitmap;
     public float speed;
     public int HP;
+    float oldSpeed;
 
     public Zomb(Context context) {
         super(context);
@@ -43,4 +49,28 @@ public class Zomb extends ImageView {
         ad.start();
         zombBitmap.recycle();
     }
+
+    public void eatAction(final BasePlant p) {
+        oldSpeed = speed;
+        speed = 0;
+
+        final Timer t = new Timer();
+        TimerTask tt = new TimerTask() {
+            @Override
+            public void run() {
+                p.HP--;
+                if (p.HP <= 0) {
+                    speed = oldSpeed;
+                    if (p != null) {
+                        p.deadAction();
+                    }
+                    t.cancel();
+                }
+
+            }
+        };
+
+        t.schedule(tt, 0, 100);
+    }
+
 }

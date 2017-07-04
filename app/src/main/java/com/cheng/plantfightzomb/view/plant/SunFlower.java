@@ -21,13 +21,14 @@ public class SunFlower extends BasePlant {
 
     public SunFlower(Context context) {
         super(context);
+        costSunCount = 50;
         plantBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.plant_0);
     }
 
     @Override
     public void beginFire() {
-
-        new Timer().schedule(new TimerTask() {
+        fireTimer = new Timer();
+        fireTimer.schedule(new TimerTask() {
             @Override
             public void run() {
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -60,5 +61,14 @@ public class SunFlower extends BasePlant {
                 });
             }
         }, 5000, 5000);
+    }
+
+    @Override
+    public void deadAction() {
+        //当植物死掉的时候添加阳光的timer也要停止
+        fireTimer.cancel();
+
+        super.deadAction();
+
     }
 }

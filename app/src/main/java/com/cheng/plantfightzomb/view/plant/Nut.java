@@ -13,6 +13,7 @@ public class Nut extends BasePlant {
     public Nut(Context context) {
         super(context);
         plantBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.plant_5);
-
+        HP = 400;
+        costSunCount = 125;
     }
 }

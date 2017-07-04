@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.ViewGroup;
 import android.widget.AbsoluteLayout;
 import android.widget.ImageView;
 
@@ -28,11 +29,13 @@ public class Pea extends BasePlant {
         super(context);
         plantBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.plant_2);
         bulletBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.bullet_0);
+        costSunCount = 100;
     }
 
     @Override
     public void beginFire() {
-        new Timer().schedule(new TimerTask() {
+        fireTimer = new Timer();
+        fireTimer.schedule(new TimerTask() {
             @Override
             public void run() {
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -49,5 +52,19 @@ public class Pea extends BasePlant {
                 });
             }
         }, 0, 1000);
+    }
+
+
+    @Override
+    public void deadAction() {
+        //当植物死掉的时候添加阳光的timer也要停止
+        fireTimer.cancel();
+        //把发射出去的子弹从界面中删除
+        for (ImageView bullet : bullets) {
+            ((ViewGroup) bullet.getParent()).removeView(bullet);
+        }
+
+        super.deadAction();
+
     }
 }

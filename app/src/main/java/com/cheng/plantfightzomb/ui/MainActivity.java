@@ -77,6 +77,19 @@ public class MainActivity extends AppCompatActivity implements BasePlant.MyCallB
                                 zombs.remove(zomb);
                                 break;
                             }
+
+                            //遍历植物
+                            for (BasePlant plant : plants) {
+                                Rect plantRect = new Rect();
+                                Rect zombRect = new Rect();
+                                plant.getGlobalVisibleRect(plantRect);
+                                zomb.getGlobalVisibleRect(zombRect);
+                                if (plantRect.contains(zombRect.centerX(), zombRect
+                                        .centerY()) && zomb.speed != 0) {
+                                    zomb.eatAction(plant);
+                                }
+                            }
+
                         }
                         //植物
                         for (BasePlant plant : plants) {
@@ -200,17 +213,30 @@ public class MainActivity extends AppCompatActivity implements BasePlant.MyCallB
                     Rect r = new Rect();
                     plantIV.getGlobalVisibleRect(r);
                     if (r.contains((int) event.getRawX(), (int) event.getRawY())) {
+                        int currentSunCount = Integer.parseInt(sunCountTV.getText().toString());
                         switch (i) {
                             case 0:
+                                if (currentSunCount < 50) {
+                                    return super.onTouchEvent(event);
+                                }
                                 dragPlant = new SunFlower(this);
                                 break;
                             case 1:
+                                if (currentSunCount < 100) {
+                                    return super.onTouchEvent(event);
+                                }
                                 dragPlant = new Pea(this);
                                 break;
                             case 2:
+                                if (currentSunCount < 175) {
+                                    return super.onTouchEvent(event);
+                                }
                                 dragPlant = new IcePea(this);
                                 break;
                             case 3:
+                                if (currentSunCount < 125) {
+                                    return super.onTouchEvent(event);
+                                }
                                 dragPlant = new Nut(this);
                                 break;
                         }
@@ -239,8 +265,11 @@ public class MainActivity extends AppCompatActivity implements BasePlant.MyCallB
                                 dragPlant.setX(r.left + r.width() / 2 - dragPlant.getWidth() / 2);
                                 dragPlant.setY(r.top + r.height() / 2 - dragPlant.getHeight() / 2);
                                 f.setTag(dragPlant);
+                                dragPlant.setTag(f);
                                 dragPlant.beginFire();
                                 plants.add(dragPlant);
+                                //花钱
+                                addSunCount(-dragPlant.costSunCount);
                                 dragPlant = null;
                                 break;
                             }
@@ -264,5 +293,15 @@ public class MainActivity extends AppCompatActivity implements BasePlant.MyCallB
         int totalCount = Integer.parseInt(sunCountTV.getText().toString()) + count;
 
         sunCountTV.setText("" + totalCount);
+    }
+
+    @Override
+    public void deleteWithPlant(BasePlant p) {
+        if (p != null) {
+            plants.remove(p);
+            //从界面中删除和从集合中删除
+            activityMain.removeView(p);
+
+        }
     }
 }

@@ -13,6 +13,7 @@ public class IcePea extends Pea {
 
     public IcePea(Context context) {
         super(context);
+        costSunCount = 175;
         plantBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.plant_3);
         bulletBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.bullet_1);
     }
